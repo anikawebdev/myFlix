@@ -3,10 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <title>myFlix</title>
 </head>
 <body>
-    <h1>myFlix</h1>
-    <h2>This returns information on movies from an API and database</h2>
+    <h1 class="h1 text-center">myFlix</h1>
+    <h2 class="h2 text-center">This returns information on movies from an API and database</h2>
+    
+    <section class="container">
+        <ul class="list-group">
+            <li class="list-group-item">
+                <ul class="row">
+                    <li class="col-2 h3">Function</li>
+                    <li class="col-2 h3">URL Endpoint</li>
+                    <li class="col-2 h3">HTTP Method</li>
+                    <li class="col-3 h3">Request</li>
+                    <li class="col-3 h3">Response</li>
+                </ul>
+            </li>
+            <li class="list-group-item">
+                <!-- Return a list of ALL movies to the user -->
+                <ul class="row">
+                    <li class="col-2">Return a list of ALL movies to the user</li>
+                    <li class="col-2">/</li>
+                    <li class="col-2">GET</li>
+                    <li class="col-3">None</li>
+                    <li class="col-3">A JSON object holding data about all movies</li>
+                </ul>
+            </li>
+            <li class="list-group-item">
+                <!-- Return data (description, genre, director, image URL, whether it’s featured or not) about a single movie by title to the user -->
+                <ul class="row">
+                    <li class="col-2">Return data (description, genre, director, image URL, whether it’s featured or not) about a single movie by title to the user</li>
+                    <li class="col-2">/movies/:Title</li>
+                    <li class="col-2">GET</li>
+                    <li class="col-3">None</li>
+                    <li class="col-3">
+                        {
+                            id: 14,
+                            title: "Movie Fourteen",
+                            status: "Regular", 
+                            description: "description 14",
+                            genre: "genre 14",
+                            director: {
+                                name: "director 14",
+                                bio: "bio 14",
+                                birthyear: "1964",
+                                deathyear: "",
+                            },
+                            image: "image 14",
+                        }
+                    </li>
+                </ul>
+            </li>
+            <li class="list-group-item">
+                <!-- Return data about a genre (description) by name/title (e.g., “Thriller”) -->
+                <ul class="row">
+                    <li class="col-2">Return data about a genre (description) by name/title (e.g., “Thriller”)</li>
+                    <li class="col-2">/movies/:Name/:genre or /movies/:Title/:genre</li>
+                    <li class="col-2">GET</li>
+                    <li class="col-3">None</li>
+                    <li class="col-3">
+                        {
+                            id: 14,
+                            title: "Movie Fourteen",
+                            status: "Regular", 
+                            description: "description 14",
+                            genre: "genre 14",
+                            director: {
+                                name: "director 14",
+                                bio: "bio 14",
+                                birthyear: "1964",
+                                deathyear: "",
+                            },
+                            image: "image 14",
+                        }
+                    </li>
+                </ul>
+            </li>
+            <li class="list-group-item">
+                 <!-- Return data about a director (bio, birth year, death year) by name -->
+                <ul class="row">
+                    <li class="col-2">Return data about a director (bio, birth year, death year) by name</li>
+                    <li class="col-2">/movies/:director</li>
+                    <li class="col-2">GET</li>
+                    <li class="col-3">None</li>
+                    <li class="col-3">
+                        director: {
+                            name: "director 14",
+                            bio: "bio 14",
+                            birthyear: "1964",
+                            deathyear: "",
+                        }
+                    </li>
+                </ul>
+            </li>
+            <li class="list-group-item">
+                <!-- Allow new users to register -->
+                <ul class="row">
+                    <li class="col-2">Allow new users to register</li>
+                    <li class="col-2">/register</li>
+                    <li class="col-2">POST</li>
+                    <li class="col-3">
+                        {
+                            name: "User",
+                            username: "user007",
+                            email: "userbond@gmail.com",
+                        }
+                    </li>
+                    <li class="col-3">Confirmation message</li>
+                </ul>
+            </li>
+            <li class="list-group-item">
+                <!-- Allow users to update their user info (username) -->
+                <ul class="row">
+                    <li class="col-2">Allow users to update their user info (username)</li>
+                    <li class="col-2">/users/:id</li>
+                    <li class="col-2">PUT</li>
+                    <li class="col-3">None</li>
+                    <li class="col-3">Confirmation message</li>
+                </ul>
+            </li>
+            <li class="list-group-item">
+                <!-- Allow users to add a movie to their list of favorites (showing only a text that a movie has been added—more on this later) -->
+                <ul class="row">
+                    <li class="col-2">Allow users to add a movie to their list of favorites (showing only a text that a movie has been added—more on this later)</li>
+                    <li class="col-2">/users/favorites</li>
+                    <li class="col-2">POST</li>
+                    <li class="col-3">
+                        {
+                            id: 14,
+                            title: "Movie Fourteen",
+                            status: "Regular", 
+                            description: "description 14",
+                            genre: "genre 14",
+                            director: {
+                                name: "director 14",
+                                bio: "bio 14",
+                                birthyear: "1964",
+                                deathyear: "",
+                            },
+                            image: "image 14",
+                        }
+                    </li>
+                    <li class="col-3">Confirmation Message</li>
+                </ul>
+            </li>
+            <li class="list-group-item">
+                <!-- Allow users to remove a movie from their list of favorites (showing only a text that a movie has been removed—more on this later) -->
+                <ul class="row">
+                    <li class="col-2">Allow users to remove a movie from their list of favorites (showing only a text that a movie has been removed—more on this later)</li>
+                    <li class="col-2">/users/favorites/:id</li>
+                    <li class="col-2">DELETE</li>
+                    <li class="col-3">None</li>
+                    <li class="col-3">Confirmation message</li>
+                </ul>
+            </li>
+            <li class="list-group-item">
+                <!-- Allow existing users to deregister (showing only a text that a user email has been removed—more on this later)  -->
+                <ul class="row">
+                    <li class="col-2">Allow existing users to deregister (showing only a text that a user email has been removed—more on this later)</li>
+                    <li class="col-2">/users/:id</li>
+                    <li class="col-2">DELETE</li>
+                    <li class="col-3">None</li>
+                    <li class="col-3">Confirmation message</li>
+                </ul>
+            </li>
+        </ul>
+      </section>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js" integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js" integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj" crossorigin="anonymous"></script>
 </body>
 </html>
