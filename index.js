@@ -32,26 +32,75 @@ server.use((error, request, response, next) => {
 //  GET REQUESTS
 // 
 // Return a list of ALL movies to the user
-server.get('/', (request, response) => {
-    response.json(movies);
+server.get('/movies', (request, response) => {
+    Movies.find(
+        {},
+        { Title: 1 },
+    )
+    .then((movies) => {
+        response.status(201).json(movies);
+    })
+    .catch((error) => {
+        console.error(error);
+        response.status(500).send('Error: ' + error);
+    });
 });
 
 // Return data (description, genre, director, image URL, whether it’s featured or not) about a single movie by title to the user
-server.get('/movies/:title', (request, response) => {
-    response.send("Successful GET request returning single movie data");
+server.get('/movies/:Title', (request, response) => {
+    Movies.findOne(
+        { Title: request.params.Title }
+    )
+    .then((movie) => {
+        response.status(201).json(movie);
+    })
+    .catch((error) => {
+        console.error(error);
+        response.status(500).send('Error: ' + error);
+    });
 });
 
 // Return data about a genre (description) by name/title (e.g., “Thriller”)
-server.get('/movies/:title/:genre', (request, response) => {
-    response.send("Successful GET request by title returning genre data");
+server.get('/movies/:Title/genre', (request, response) => {
+    Movies.findOne(
+        { Title: request.params.Title },
+        {Title: 1, Genre: 1}
+    )
+    .then((movie) => {
+        response.status(201).json(movie);
+    })
+    .catch((error) => {
+        console.error(error);
+        response.status(500).send('Error: ' + error);
+    });
 });
-server.get('/movies/:name/:genre', (request, response) => {
-    response.send("Successful GET request by name returning genre data");
+server.get('/movies/genre/:Name', (request, response) => {
+    Movies.findOne(
+        { "Genre.Name": request.params.Name },
+        {Genre: 1, "_id": 0}
+    )
+    .then((movie) => {
+        response.status(201).json(movie);
+    })
+    .catch((error) => {
+        console.error(error);
+        response.status(500).send('Error: ' + error);
+    });
 });
 
 // Return data about a director (bio, birth year, death year) by name
-server.get('/movies/:director', (request, response) => {
-    response.send("Successful GET request returning director data");
+server.get('/movies/director/:Name', (request, response) => {
+    Movies.findOne(
+        { "Director.Name": request.params.Name },
+        {Director: 1, "_id": 0}
+    )
+    .then((movie) => {
+        response.status(201).json(movie);
+    })
+    .catch((error) => {
+        console.error(error);
+        response.status(500).send('Error: ' + error);
+    });
 });
 
 // 
