@@ -25,7 +25,7 @@
                 <!-- Return a list of ALL movies to the user -->
                 <ul class="row">
                     <li class="col-2">Return a list of ALL movies to the user</li>
-                    <li class="col-2">/</li>
+                    <li class="col-2">/movies</li>
                     <li class="col-2">GET</li>
                     <li class="col-3">None</li>
                     <li class="col-3">A JSON object holding data about all movies</li>
@@ -60,7 +60,7 @@
                 <!-- Return data about a genre (description) by name/title (e.g., “Thriller”) -->
                 <ul class="row">
                     <li class="col-2">Return data about a genre (description) by name/title (e.g., “Thriller”)</li>
-                    <li class="col-2">/movies/:Name/:genre or /movies/:Title/:genre</li>
+                    <li class="col-2">/movies/:Title/genre or /movies/genre/:Name</li>
                     <li class="col-2">GET</li>
                     <li class="col-3">None</li>
                     <li class="col-3">
@@ -85,7 +85,7 @@
                  <!-- Return data about a director (bio, birth year, death year) by name -->
                 <ul class="row">
                     <li class="col-2">Return data about a director (bio, birth year, death year) by name</li>
-                    <li class="col-2">/movies/:director</li>
+                    <li class="col-2">/movies/director/:Name</li>
                     <li class="col-2">GET</li>
                     <li class="col-3">None</li>
                     <li class="col-3">
@@ -102,7 +102,7 @@
                 <!-- Allow new users to register -->
                 <ul class="row">
                     <li class="col-2">Allow new users to register</li>
-                    <li class="col-2">/register</li>
+                    <li class="col-2">/users</li>
                     <li class="col-2">POST</li>
                     <li class="col-3">
                         {
@@ -118,7 +118,7 @@
                 <!-- Allow users to update their user info (username) -->
                 <ul class="row">
                     <li class="col-2">Allow users to update their user info (username)</li>
-                    <li class="col-2">/users/:id</li>
+                    <li class="col-2">/users/:Username</li>
                     <li class="col-2">PUT</li>
                     <li class="col-3">None</li>
                     <li class="col-3">Confirmation message</li>
@@ -128,7 +128,7 @@
                 <!-- Allow users to add a movie to their list of favorites (showing only a text that a movie has been added—more on this later) -->
                 <ul class="row">
                     <li class="col-2">Allow users to add a movie to their list of favorites (showing only a text that a movie has been added—more on this later)</li>
-                    <li class="col-2">/users/favorites</li>
+                    <li class="col-2">/users/:Username/favorites/:MovieID</li>
                     <li class="col-2">POST</li>
                     <li class="col-3">
                         {
@@ -153,7 +153,7 @@
                 <!-- Allow users to remove a movie from their list of favorites (showing only a text that a movie has been removed—more on this later) -->
                 <ul class="row">
                     <li class="col-2">Allow users to remove a movie from their list of favorites (showing only a text that a movie has been removed—more on this later)</li>
-                    <li class="col-2">/users/favorites/:id</li>
+                    <li class="col-2">/users/:Username/favorites/:MovieID</li>
                     <li class="col-2">DELETE</li>
                     <li class="col-3">None</li>
                     <li class="col-3">Confirmation message</li>
@@ -163,7 +163,7 @@
                 <!-- Allow existing users to deregister (showing only a text that a user email has been removed—more on this later)  -->
                 <ul class="row">
                     <li class="col-2">Allow existing users to deregister (showing only a text that a user email has been removed—more on this later)</li>
-                    <li class="col-2">/users/:id</li>
+                    <li class="col-2">/users/:Username</li>
                     <li class="col-2">DELETE</li>
                     <li class="col-3">None</li>
                     <li class="col-3">Confirmation message</li>
