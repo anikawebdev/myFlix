@@ -186,12 +186,40 @@ server.put('/users/:Username', (request, response) => {
 // DELETE REQUESTS
 // 
 // Allow users to remove a movie from their list of favorites (showing only a text that a movie has been removed—more on this later)
-server.delete('/users/favorites/:id', (request, response) => {
-    response.send("Successful DELETE request favorites");
+server.delete('/users/:Username/favorites/:MovieID', (request, response) => {
+    Users.findOneAndUpdate(
+        { 
+            Username: request.params.Username }, 
+        {
+            $pull: { FavoriteMovies: mongoose.Types.ObjectId(request.params.MovieID) }
+        },
+        { new: true }, // This line makes sure that the updated document is returned
+        (error, updatedUser) => {
+            if (error) {
+                console.error(error);
+                response.status(500).send('Error: ' + error);
+            } 
+            else {
+                response.json(updatedUser);
+            }
+     });
 });
 // Allow existing users to deregister (showing only a text that a user email has been removed—more on this later)
-server.delete('/users/:id', (request, response) => {
-    response.send("Successful DELETE request users");
+server.delete('/users/:Username', (request, response) => {
+    Users
+    .findOneAndRemove({ Username: request.params.Username })
+    .then((user) => {
+        if (!user) {
+            response.status(400).send(request.params.Username + ' was not found');
+        } 
+        else {
+            response.status(200).send(request.params.Username + ' was deleted.');
+        }
+    })
+    .catch((error) => {
+      console.error(error);
+      response.status(500).send('Error: ' + error);
+    });
 });
 
 // Port
