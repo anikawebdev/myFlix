@@ -107,20 +107,59 @@ server.get('/movies/director/:Name', (request, response) => {
 // POST REQUESTS
 // 
 // Allow new users to register
-server.post('/register', (request, response) => {
-    response.send("Successful POST request registration");
+server.post('/users', (request, response) => {
+    Users.findOne(
+        { Username: request.body.Username }
+    )
+    .then((user) => {
+      if (user) {
+        return response.status(400).send(request.body.Username + ' already exists');
+      } else {
+        Users
+          .create({
+            Username: request.body.Username,
+            Password: request.body.Password,
+            Email: request.body.Email,
+            Birthday: request.body.Birthday,
+            FavoriteMovies: [],
+          })
+          .then((user) =>{response.status(201).json(user) })
+        .catch((error) => {
+          console.error(error);
+          response.status(500).send('Error: ' + error);
+        })
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      response.status(500).send('Error: ' + error);
+    });
 });
 
 // Allow users to add a movie to their list of favorites (showing only a text that a movie has been added—more on this later
-server.post('/users/favorites', (request, response) => {
-    response.send("Successful POST request favorites");
+server.post('/users/:Username/favorites/:MovieID', (request, response) => {
+    Users.findOneAndUpdate(
+        { Username: request.params.Username }, 
+        {
+            $addToSet: { FavoriteMovies: mongoose.Types.ObjectId(request.params.MovieID) }
+        },
+        { new: true }, // This line makes sure that the updated document is returned
+        (error, updatedUser) => {
+            if (error) {
+                console.error(error);
+                response.status(500).send('Error: ' + error);
+            } 
+            else {
+                response.json(updatedUser);
+            }
+     });
 });
 
 // 
 // PUT REQUESTS
 // 
 // Allow users to update their user info (username)
-server.put('/users/:id', (request, response) => {
+server.put('/users/:Username', (request, response) => {
     response.send("Successful PUT request update");
 });
 
