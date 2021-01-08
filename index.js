@@ -160,7 +160,26 @@ server.post('/users/:Username/favorites/:MovieID', (request, response) => {
 // 
 // Allow users to update their user info (username)
 server.put('/users/:Username', (request, response) => {
-    response.send("Successful PUT request update");
+    Users.findOneAndUpdate(
+        { Username: request.params.Username }, 
+        { $set:
+            {
+                Username: request.body.Username,
+                Password: request.body.Password,
+                Email: request.body.Email,
+                Birthday: request.body.Birthday
+            }
+        },
+        { new: true }, // This line makes sure that the updated document is returned
+        (error, updatedUser) => {
+            if(error) {
+                console.error(err);
+                response.status(500).send('Error: ' + error);
+            } 
+            else {
+                response.json(updatedUser);
+            }
+    });
 });
 
 // 
