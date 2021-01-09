@@ -115,7 +115,7 @@ server.get('/movies/director/:Name', passport.authenticate('jwt', { session: fal
 // 
 // Allow new users to register
 server.post('/users', (request, response) => {
-    let hashedPassword = Users.hashPassword(req.body.Password);
+    let hashedPassword = Users.hashPassword(request.body.Password);
     Users.findOne(
         { Username: request.body.Username }
     )
@@ -126,7 +126,7 @@ server.post('/users', (request, response) => {
         Users
           .create({
             Username: request.body.Username,
-            Password: request.body.Password,
+            Password: hashedPassword,
             Email: request.body.Email,
             Birthday: request.body.Birthday,
             FavoriteMovies: [],
