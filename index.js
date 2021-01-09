@@ -1,6 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const bodyParser = require('body-parser');
+const cors = require('cors');
 // const methodOverride = require('method-override');
 const server = express();
 const mongoose = require('mongoose');
@@ -25,6 +26,8 @@ server.use(bodyParser.json());
 // server.use(methodOverride());
 
 let auth = require('./auth')(server);
+
+server.use(cors());
 
 // Error-handling middleware function
 server.use((error, request, response, next) => {
