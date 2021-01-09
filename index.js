@@ -13,7 +13,8 @@ require('./passport');
 const Movies = Models.Movie;
 const Users = Models.User;
 
-mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
+// mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb+srv://anika:anika@cluster0.gcteu.mongodb.net/myFlixDB?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
 
 server.use(express.static('public'));
 
