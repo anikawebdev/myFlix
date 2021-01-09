@@ -39,7 +39,11 @@ server.use((error, request, response, next) => {
 
 //
 //  GET REQUESTS
-// 
+//
+server.get('/', (request, response) => {
+    response.send('Welcome to movies api');
+  });
+
 // Return a list of ALL movies to the user
 server.get('/movies', passport.authenticate('jwt', { session: false }), (request, response) => {
     Movies.find(
