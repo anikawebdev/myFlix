@@ -5,6 +5,8 @@ const bodyParser = require('body-parser');
 const server = express();
 const mongoose = require('mongoose');
 const Models = require('./models.js');
+const passport = require('passport');
+require('./passport');
 
 const Movies = Models.Movie;
 const Users = Models.User;
@@ -22,6 +24,8 @@ server.use(bodyParser.urlencoded({
 server.use(bodyParser.json());
 // server.use(methodOverride());
 
+let auth = require('./auth')(server);
+
 // Error-handling middleware function
 server.use((error, request, response, next) => {
     console.error(error.stack);
@@ -32,7 +36,7 @@ server.use((error, request, response, next) => {
 //  GET REQUESTS
 // 
 // Return a list of ALL movies to the user
-server.get('/movies', (request, response) => {
+server.get('/movies', passport.authenticate('jwt', { session: false }), (request, response) => {
     Movies.find(
         {},
         { Title: 1 },
@@ -47,7 +51,7 @@ server.get('/movies', (request, response) => {
 });
 
 // Return data (description, genre, director, image URL, whether it’s featured or not) about a single movie by title to the user
-server.get('/movies/:Title', (request, response) => {
+server.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (request, response) => {
     Movies.findOne(
         { Title: request.params.Title }
     )
@@ -61,7 +65,7 @@ server.get('/movies/:Title', (request, response) => {
 });
 
 // Return data about a genre (description) by name/title (e.g., “Thriller”)
-server.get('/movies/:Title/genre', (request, response) => {
+server.get('/movies/:Title/genre', passport.authenticate('jwt', { session: false }), (request, response) => {
     Movies.findOne(
         { Title: request.params.Title },
         {Title: 1, Genre: 1}
@@ -74,7 +78,7 @@ server.get('/movies/:Title/genre', (request, response) => {
         response.status(500).send('Error: ' + error);
     });
 });
-server.get('/movies/genre/:Name', (request, response) => {
+server.get('/movies/genre/:Name', passport.authenticate('jwt', { session: false }), (request, response) => {
     Movies.findOne(
         { "Genre.Name": request.params.Name },
         {Genre: 1, "_id": 0}
@@ -89,7 +93,7 @@ server.get('/movies/genre/:Name', (request, response) => {
 });
 
 // Return data about a director (bio, birth year, death year) by name
-server.get('/movies/director/:Name', (request, response) => {
+server.get('/movies/director/:Name', passport.authenticate('jwt', { session: false }), (request, response) => {
     Movies.findOne(
         { "Director.Name": request.params.Name },
         {Director: 1, "_id": 0}
@@ -107,7 +111,7 @@ server.get('/movies/director/:Name', (request, response) => {
 // POST REQUESTS
 // 
 // Allow new users to register
-server.post('/users', (request, response) => {
+server.post('/users', passport.authenticate('jwt', { session: false }), (request, response) => {
     Users.findOne(
         { Username: request.body.Username }
     )
@@ -137,7 +141,7 @@ server.post('/users', (request, response) => {
 });
 
 // Allow users to add a movie to their list of favorites (showing only a text that a movie has been added—more on this later
-server.post('/users/:Username/favorites/:MovieID', (request, response) => {
+server.post('/users/:Username/favorites/:MovieID', passport.authenticate('jwt', { session: false }), (request, response) => {
     Users.findOneAndUpdate(
         { Username: request.params.Username }, 
         {
@@ -159,7 +163,7 @@ server.post('/users/:Username/favorites/:MovieID', (request, response) => {
 // PUT REQUESTS
 // 
 // Allow users to update their user info (username)
-server.put('/users/:Username', (request, response) => {
+server.put('/users/:Username', passport.authenticate('jwt', { session: false }), (request, response) => {
     Users.findOneAndUpdate(
         { Username: request.params.Username }, 
         { $set:
@@ -186,7 +190,7 @@ server.put('/users/:Username', (request, response) => {
 // DELETE REQUESTS
 // 
 // Allow users to remove a movie from their list of favorites (showing only a text that a movie has been removed—more on this later)
-server.delete('/users/:Username/favorites/:MovieID', (request, response) => {
+server.delete('/users/:Username/favorites/:MovieID', passport.authenticate('jwt', { session: false }), (request, response) => {
     Users.findOneAndUpdate(
         { 
             Username: request.params.Username }, 
@@ -205,7 +209,7 @@ server.delete('/users/:Username/favorites/:MovieID', (request, response) => {
      });
 });
 // Allow existing users to deregister (showing only a text that a user email has been removed—more on this later)
-server.delete('/users/:Username', (request, response) => {
+server.delete('/users/:Username', passport.authenticate('jwt', { session: false }), (request, response) => {
     Users
     .findOneAndRemove({ Username: request.params.Username })
     .then((user) => {
