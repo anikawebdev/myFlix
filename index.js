@@ -115,6 +115,7 @@ server.get('/movies/director/:Name', passport.authenticate('jwt', { session: fal
 // 
 // Allow new users to register
 server.post('/users', (request, response) => {
+    let hashedPassword = Users.hashPassword(req.body.Password);
     Users.findOne(
         { Username: request.body.Username }
     )
