@@ -2,6 +2,7 @@ const express = require("express");
 const morgan = require("morgan");
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const { check, validationResult } = require('express-validator');
 // const methodOverride = require('method-override');
 const server = express();
 const mongoose = require('mongoose');
@@ -114,29 +115,41 @@ server.get('/movies/director/:Name', passport.authenticate('jwt', { session: fal
 // POST REQUESTS
 // 
 // Allow new users to register
-server.post('/users', (request, response) => {
-    let hashedPassword = Users.hashPassword(request.body.Password);
-    Users.findOne(
-        { Username: request.body.Username }
-    )
-    .then((user) => {
-      if (user) {
-        return response.status(400).send(request.body.Username + ' already exists');
-      } else {
-        Users
-          .create({
-            Username: request.body.Username,
-            Password: hashedPassword,
-            Email: request.body.Email,
-            Birthday: request.body.Birthday,
-            FavoriteMovies: [],
-          })
-          .then((user) =>{response.status(201).json(user) })
-        .catch((error) => {
-          console.error(error);
-          response.status(500).send('Error: ' + error);
-        })
-      }
+server.post('/users', [
+        check('Username', 'Username is required').isLength({min: 5}),
+        check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+        check('Password', 'Password is required').not().isEmpty(),
+        check('Email', 'Email does not appear to be valid').isEmail()
+    ],
+    (request, response) => {
+        let errors = validationResult(request);
+
+        if (!errors.isEmpty()) {
+          return response.status(422).json({ errors: errors.array() });
+        }
+        let hashedPassword = Users.hashPassword(request.body.Password);
+        Users.findOne(
+            { Username: request.body.Username }
+        )
+        .then((user) => {
+            if (user) {
+            return response.status(400).send(request.body.Username + ' already exists');
+        } 
+        else {
+            Users
+                .create({
+                    Username: request.body.Username,
+                    Password: hashedPassword,
+                    Email: request.body.Email,
+                    Birthday: request.body.Birthday,
+                    FavoriteMovies: [],
+                })
+                .then((user) =>{response.status(201).json(user) })
+                .catch((error) => {
+                    console.error(error);
+                    response.status(500).send('Error: ' + error);
+                })
+        }
     })
     .catch((error) => {
       console.error(error);
