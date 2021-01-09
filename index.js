@@ -194,7 +194,7 @@ server.put('/users/:Username', passport.authenticate('jwt', { session: false }),
         { new: true }, // This line makes sure that the updated document is returned
         (error, updatedUser) => {
             if(error) {
-                console.error(err);
+                console.error(error);
                 response.status(500).send('Error: ' + error);
             } 
             else {
