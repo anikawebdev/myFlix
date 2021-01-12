@@ -13,8 +13,7 @@ require('./passport');
 const Movies = Models.Movie;
 const Users = Models.User;
 
-// mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
-mongoose.connect('mongodb+srv://anika:anika@cluster0.gcteu.mongodb.net/myFlixDB?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('process.env.CONNECTION_URI', { useNewUrlParser: true, useUnifiedTopology: true });
 
 server.use(express.static('public'));
 
@@ -185,13 +184,25 @@ server.post('/users/:Username/favorites/:MovieID', passport.authenticate('jwt', 
 // PUT REQUESTS
 // 
 // Allow users to update their user info (username)
-server.put('/users/:Username', passport.authenticate('jwt', { session: false }), (request, response) => {
+server.put('/users/:Username', passport.authenticate('jwt', { session: false }), [
+    check('Username', 'Username is required').isLength({min: 5}),
+    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Email', 'Email does not appear to be valid').isEmail()
+], (request, response) => {
+    let errors = validationResult(request);
+
+    if (!errors.isEmpty()) {
+        return response.status(422).json({ errors: errors.array() });
+    }
+    let hashedPassword = Users.hashPassword(request.body.Password);
+    
     Users.findOneAndUpdate(
         { Username: request.params.Username }, 
         { $set:
             {
                 Username: request.body.Username,
-                Password: request.body.Password,
+                Password: hashedPassword,
                 Email: request.body.Email,
                 Birthday: request.body.Birthday
             }
